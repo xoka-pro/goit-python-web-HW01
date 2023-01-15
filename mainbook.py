@@ -1,16 +1,29 @@
 import pickle
+from abc import ABC, abstractmethod
 from collections import UserDict
 
 
-class MainBook(UserDict):
+class AbcStorage(ABC):
+    """Abstract class for Mainbook"""
+
+    @abstractmethod
+    def save_to_file(self, fh):
+        pass
+
+    @abstractmethod
+    def load_from_file(self, fh):
+        pass
+
+
+class MainBook(AbcStorage, UserDict):
     """Parent class for notebook and contact book"""
 
-    def saver(self, fh):
+    def save_to_file(self, fh):
         """Saving data to file"""
         with open(fh, 'wb') as file:
             pickle.dump(self.data, file)
 
-    def loader(self, fh):
+    def load_from_file(self, fh):
         """Load data from file"""
         try:
             with open(fh, 'rb') as file:

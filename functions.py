@@ -45,7 +45,7 @@ def goodbye():
 
 
 @input_error
-def add(name=None, number=None, birthday=None, email=None, address=None) -> str:
+def add() -> str:
     """Function to add new record or add new contact phone number"""
     name = input('Input contact name: ')
     if name not in CONTACTS:
@@ -56,13 +56,13 @@ def add(name=None, number=None, birthday=None, email=None, address=None) -> str:
         address = input('Input address: ')
         new_number = Record(name, number, birthday, email, address)
         CONTACTS.add_record(new_number)
-        CONTACTS.saver(FILENAME_CONTACTS)
+        CONTACTS.save_to_file(FILENAME_CONTACTS)
         return f'Contact add successfully'
     else:
         print(f'Contact {name} already exist. Adding new number')
         number = input('Input new phone number: ')
         CONTACTS[name].add_phone(number)
-        CONTACTS.saver(FILENAME_CONTACTS)
+        CONTACTS.save_to_file(FILENAME_CONTACTS)
         return f'New number added to {name}'
 
 
@@ -74,7 +74,7 @@ def adding_note() -> str:
     tags = tags.split(" ")
     note = Note(text, tags)
     NOTES.add_note(note)
-    NOTES.saver(FILENAME_NOTES)
+    NOTES.save_to_file(FILENAME_NOTES)
     if note.tags:
         return f'New note with tags added'
     return f'New note added'
@@ -87,7 +87,7 @@ def change_address(*args) -> str:
     name, old_value, new_value, *_ = args
     if name in CONTACTS:
         CONTACTS[name].change_field('address', old_value, new_value)
-        CONTACTS.saver(FILENAME_CONTACTS)
+        CONTACTS.save_to_file(FILENAME_CONTACTS)
     else:
         return f'No contact "{name}"'
     return f'Contact address change successfully'
@@ -100,7 +100,7 @@ def change_birthday(*args) -> str:
     name, old_value, new_value, *_ = args
     if name in CONTACTS:
         CONTACTS[name].change_field('birthday', old_value, new_value)
-        CONTACTS.saver(FILENAME_CONTACTS)
+        CONTACTS.save_to_file(FILENAME_CONTACTS)
     else:
         return f'No contact "{name}"'
     return f'Contact birthday change successfully'
@@ -113,7 +113,7 @@ def change_email(*args) -> str:
     name, old_value, new_value, *_ = args
     if name in CONTACTS:
         CONTACTS[name].change_field('email', old_value, new_value)
-        CONTACTS.saver(FILENAME_CONTACTS)
+        CONTACTS.save_to_file(FILENAME_CONTACTS)
     else:
         return f'No contact "{name}"'
     return f'Contact email change successfully'
@@ -126,7 +126,7 @@ def change(*args) -> str:
     name, old_number, new_number, *_ = args
     if name in CONTACTS:
         CONTACTS[name].change_phone(old_number, new_number)
-        CONTACTS.saver(FILENAME_CONTACTS)
+        CONTACTS.save_to_file(FILENAME_CONTACTS)
     else:
         return f'No contact "{name}"'
     return f'Contact change successfully'
@@ -138,7 +138,7 @@ def delete_phone(name, phone) -> str:
 
     if name in CONTACTS:
         CONTACTS[name].del_phone(phone)
-        CONTACTS.saver(FILENAME_CONTACTS)
+        CONTACTS.save_to_file(FILENAME_CONTACTS)
     else:
         return f'No contact "{name}"'
     return f'Phone number deleted successfully'
@@ -158,7 +158,7 @@ def delete_note() -> str:
     title = title[:20]
     if NOTES.data.get(title):
         NOTES.delete_note(title)
-        NOTES.saver(FILENAME_NOTES)
+        NOTES.save_to_file(FILENAME_NOTES)
         return f'Note deleted successfully'
     return f'I can not delete the note. There is no note with title "{title}".'
 
@@ -171,7 +171,7 @@ def editing_note() -> str:
     if title in NOTES.data.keys():
         new_text = input("Input the new text of note: ")
         NOTES.edit_note(title, new_text)
-        NOTES.saver(FILENAME_NOTES)
+        NOTES.save_to_file(FILENAME_NOTES)
         return f'Note changed successfully'
     return f'I can not change the note. There is no note with title "{title}".'
 
@@ -207,7 +207,7 @@ def searching_by_word(word: str) -> str:
 @input_error
 def searching_by_tag(word: str) -> str:
     """Function to search by tag"""
-    notes_list = list(map(str,NOTES.search_by_tags(word)))
+    notes_list = list(map(str, NOTES.search_by_tags(word)))
     res = "\n" + "\n\n".join(notes_list) + "\n"
     return res
 
@@ -388,5 +388,5 @@ operations = {
 
 
 def startup_loader():
-    CONTACTS.loader(FILENAME_CONTACTS)
-    NOTES.loader(FILENAME_NOTES)
+    CONTACTS.load_from_file(FILENAME_CONTACTS)
+    NOTES.load_from_file(FILENAME_NOTES)
