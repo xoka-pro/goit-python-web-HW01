@@ -4,7 +4,7 @@ from functions import *
 def main():
     """ Main function - all interaction with user """
     startup_loader()
-    print(hello())
+    print(CLI.hello())
     meow = 0
     while True:
         msg = input("Input command: ")
